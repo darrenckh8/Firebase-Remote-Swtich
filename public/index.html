@@ -86,31 +86,25 @@
     <!--CONTENT (SENSOR READINGS)-->
     <div class="content-sign-in" id="content-sign-in" style="display: none">
       <div class="card-grid">
-        <!-- Use JavaScript to dynamically create cards -->
+        <!-- Use JavaScript to dynamically create cards for each board -->
         <script>
-          for (let gpioPin = 2; gpioPin <= 33; gpioPin++) {
-            const card = document.createElement("div");
-            card.classList.add("card");
+          const boardNames = ["board1", "board2"]; // Add more board names as needed
 
-            const cardTitle = document.createElement("p");
-            cardTitle.classList.add("card-title");
-            cardTitle.innerHTML = `<i class="fas fa-lightbulb"></i> GPIO ${gpioPin}`;
-            card.appendChild(cardTitle);
-
-            const buttons = document.createElement("p");
-            buttons.innerHTML = `
-          <button class="button-on" id="btn${gpioPin}On">ON</button>
-          <button class="button-off" id="btn${gpioPin}Off">OFF</button>
-        `;
-            card.appendChild(buttons);
-
-            const state = document.createElement("p");
-            state.classList.add("state");
-            state.innerHTML = `State:<span id="state${gpioPin}"></span>`;
-            card.appendChild(state);
-
-            document.querySelector(".card-grid").appendChild(card);
-          }
+          boardNames.forEach((boardName) => {
+            for (let gpioPin = 2; gpioPin <= 33; gpioPin++) {
+              document.write(`
+            <!-- CARD FOR GPIO ${gpioPin} on ${boardName} -->
+            <div class="card">
+              <p class="card-title"><i class="fas fa-lightbulb"></i> GPIO ${gpioPin} on ${boardName}</p>
+              <p>
+                <button class="button-on" id="btn${boardName}-${gpioPin}On">ON</button>
+                <button class="button-off" id="btn${boardName}-${gpioPin}Off">OFF</button>
+              </p>
+              <p class="state">State:<span id="state${boardName}-${gpioPin}"></span></p>
+            </div>
+          `);
+            }
+          });
         </script>
       </div>
     </div>
