@@ -4,89 +4,59 @@ const userDetailsElement = document.querySelector('#user-details');
 const authBarElement = document.querySelector("#authentication-bar");
 
 // Elements for GPIO states
-const stateElement1 = document.getElementById("state1");
-const stateElement2 = document.getElementById("state2");
-const stateElement3 = document.getElementById("state3");
+const stateElements = {}; // Store state elements in an object
 
 // Button Elements
-const btn1On = document.getElementById('btn1On');
-const btn1Off = document.getElementById('btn1Off');
-const btn2On = document.getElementById('btn2On');
-const btn2Off = document.getElementById('btn2Off');
-const btn3On = document.getElementById('btn3On');
-const btn3Off = document.getElementById('btn3Off');
+const btnOn = {};
+const btnOff = {};
 
-// Database path for GPIO states
-var dbPathOutput1 = 'board1/outputs/digital/12';
-var dbPathOutput2 = 'board1/outputs/digital/13';
-var dbPathOutput3 = 'board1/outputs/digital/14';
+// Database references for GPIO pins
+const dbPathOutputs = {}; // Store database paths in an object
+const dbRefOutputs = {}; // Store database references in an object
 
-// Database references
-var dbRefOutput1 = firebase.database().ref().child(dbPathOutput1);
-var dbRefOutput2 = firebase.database().ref().child(dbPathOutput2);
-var dbRefOutput3 = firebase.database().ref().child(dbPathOutput3);
+// Initialize GPIO pins dynamically
+for (let gpioPin = 2; gpioPin <= 33; gpioPin++) {
+  // Create state element
+  stateElements[gpioPin] = document.getElementById(`state${gpioPin}`);
+
+  // Create button elements
+  btnOn[gpioPin] = document.getElementById(`btn${gpioPin}On`);
+  btnOff[gpioPin] = document.getElementById(`btn${gpioPin}Off`);
+
+  // Define database path for each GPIO pin
+  dbPathOutputs[gpioPin] = `board1/outputs/digital/${gpioPin}`;
+  dbRefOutputs[gpioPin] = firebase.database().ref().child(dbPathOutputs[gpioPin]);
+
+  // Update states depending on the database value
+  dbRefOutputs[gpioPin].on('value', snap => {
+    if (snap.val() == 1) {
+      stateElements[gpioPin].innerText = "ON";
+    } else {
+      stateElements[gpioPin].innerText = "OFF";
+    }
+  });
+
+  // Update database upon button click
+  btnOn[gpioPin].onclick = () => {
+    dbRefOutputs[gpioPin].set(1);
+  };
+
+  btnOff[gpioPin].onclick = () => {
+    dbRefOutputs[gpioPin].set(0);
+  };
+}
 
 // MANAGE LOGIN/LOGOUT UI
 const setupUI = (user) => {
   if (user) {
-    //toggle UI elements
+    // Toggle UI elements
     loginElement.style.display = 'none';
     contentElement.style.display = 'block';
     authBarElement.style.display ='block';
     userDetailsElement.style.display ='block';
     userDetailsElement.innerHTML = user.email;
-
-    //Update states depending on the database value
-    dbRefOutput1.on('value', snap => {
-        if(snap.val()==1) {
-            stateElement1.innerText="ON";
-        }
-        else{
-            stateElement1.innerText="OFF";
-        }
-    });
-    dbRefOutput2.on('value', snap => {
-        if(snap.val()==1) {
-            stateElement2.innerText="ON";
-        }
-        else{
-            stateElement2.innerText="OFF";
-        }
-    });
-    dbRefOutput3.on('value', snap => {
-        if(snap.val()==1) {
-            stateElement3.innerText="ON";
-        }
-        else{
-            stateElement3.innerText="OFF";
-        }
-    });
-
-    // Update database uppon button click
-    btn1On.onclick = () =>{
-        dbRefOutput1.set(1);
-    }
-    btn1Off.onclick = () =>{
-        dbRefOutput1.set(0);
-    }
-
-    btn2On.onclick = () =>{
-        dbRefOutput2.set(1);
-    }
-    btn2Off.onclick = () =>{
-        dbRefOutput2.set(0);
-    }
-
-    btn3On.onclick = () =>{
-        dbRefOutput3.set(1);
-    }
-    btn3Off.onclick = () =>{
-        dbRefOutput3.set(0);
-    }
-
-  // if user is logged out
-  } else{
-    // toggle UI elements
+  } else {
+    // Toggle UI elements
     loginElement.style.display = 'block';
     authBarElement.style.display ='none';
     userDetailsElement.style.display ='none';

@@ -86,35 +86,32 @@
     <!--CONTENT (SENSOR READINGS)-->
     <div class="content-sign-in" id="content-sign-in" style="display: none">
       <div class="card-grid">
-        <!--CARD FOR GPIO 12-->
-        <div class="card">
-          <p class="card-title"><i class="fas fa-lightbulb"></i> GPIO 12</p>
-          <p>
-            <button class="button-on" id="btn1On">ON</button>
-            <button class="button-off" id="btn1Off">OFF</button>
-          </p>
-          <p class="state">State:<span id="state1"></span></p>
-        </div>
+        <!-- Use JavaScript to dynamically create cards -->
+        <script>
+          for (let gpioPin = 2; gpioPin <= 33; gpioPin++) {
+            const card = document.createElement("div");
+            card.classList.add("card");
 
-        <!--CARD FOR GPIO 13-->
-        <div class="card">
-          <p class="card-title"><i class="fas fa-lightbulb"></i> GPIO 13</p>
-          <p>
-            <button class="button-on" id="btn2On">ON</button>
-            <button class="button-off" id="btn2Off">OFF</button>
-          </p>
-          <p class="state">State:<span id="state2"></span></p>
-        </div>
+            const cardTitle = document.createElement("p");
+            cardTitle.classList.add("card-title");
+            cardTitle.innerHTML = `<i class="fas fa-lightbulb"></i> GPIO ${gpioPin}`;
+            card.appendChild(cardTitle);
 
-        <!--CARD FOR GPIO 14-->
-        <div class="card">
-          <p class="card-title"><i class="fas fa-lightbulb"></i> GPIO 14</p>
-          <p>
-            <button class="button-on" id="btn3On">ON</button>
-            <button class="button-off" id="btn3Off">OFF</button>
-          </p>
-          <p class="state">State:<span id="state3"></span></p>
-        </div>
+            const buttons = document.createElement("p");
+            buttons.innerHTML = `
+          <button class="button-on" id="btn${gpioPin}On">ON</button>
+          <button class="button-off" id="btn${gpioPin}Off">OFF</button>
+        `;
+            card.appendChild(buttons);
+
+            const state = document.createElement("p");
+            state.classList.add("state");
+            state.innerHTML = `State:<span id="state${gpioPin}"></span>`;
+            card.appendChild(state);
+
+            document.querySelector(".card-grid").appendChild(card);
+          }
+        </script>
       </div>
     </div>
     <script src="scripts/auth.js"></script>
