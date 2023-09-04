@@ -5,7 +5,6 @@
 #include <ESP8266WiFi.h>
 #endif
 #include <Firebase_ESP_Client.h>
-#include <HTTPClient.h>
 
 // Provide the token generation process info.
 #include "addons/TokenHelper.h"
@@ -33,6 +32,7 @@
 
 // Define Firebase objects
 FirebaseData stream;
+FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
 
@@ -194,34 +194,23 @@ void handleSerialInput()
         Serial.print(newState == 1 ? "ON " : "OFF ");
         Serial.println("GPIO Pin " + String(gpioPin));
 
-        // Create the URL to update the Firebase RTDB (adjust the URL to your database)
-        String url = DATABASE_URL + String(listenerPath) + String(gpioPin) + ".json";
+        // Create the path to update in Firebase RTDB (adjust the path to your database)
+        String path = "/" + listenerPath + String(gpioPin);
 
-        // Create a JSON string with the new state
-        String jsonPayload = String(newState);
-
-        HTTPClient http;
-        http.begin(url);
-
-        // Set the HTTP PUT method and the JSON payload
-        http.addHeader("Content-Type", "application/json");
-        int httpResponseCode = http.PUT(jsonPayload);
-
-        if (httpResponseCode == HTTP_CODE_OK)
+        // Set the new state using Firebase's `setInt` function
+        if (Firebase.RTDB.setInt(&fbdo, path.c_str(), newState))
         {
           Serial.println("Firebase RTDB update successful");
         }
         else
         {
-          Serial.print("Firebase RTDB update failed. HTTP response code: ");
-          Serial.println(httpResponseCode);
+          Serial.println("Firebase RTDB setInt failed");
+          Serial.println(fbdo.errorReason());
         }
-
-        http.end();
       }
       else
       {
-        Serial.println("Invalid GPIO Pin\nUse GPIO pins 2,4,5 or 12-33");
+        Serial.println("Invalid GPIO Pin\nUse GPIO pins 2, 4, 5, or 12-33");
       }
     }
     else
