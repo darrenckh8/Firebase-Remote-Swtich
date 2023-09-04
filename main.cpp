@@ -23,7 +23,7 @@
 #define USER_EMAIL "darrenckh8@gmail.com"
 #define USER_PASSWORD "Yokenam123"
 
-// Insert RTDB URLefine the RTDB URL
+// Insert RTDB URL & Define the RTDB URL
 #define DATABASE_URL "https://fp-ep32-default-rtdb.asia-southeast1.firebasedatabase.app/"
 
 // Define board paths & add more board nodes in database to add more support for more boards
@@ -195,7 +195,7 @@ void handleSerialInput()
         Serial.println("GPIO Pin " + String(gpioPin));
 
         // Create the URL to update the Firebase RTDB (adjust the URL to your database)
-        String url = "https://fp-ep32-default-rtdb.asia-southeast1.firebasedatabase.app/" + String(listenerPath) + String(gpioPin) + ".json";
+        String url = DATABASE_URL + String(listenerPath) + String(gpioPin) + ".json";
 
         // Create a JSON string with the new state
         String jsonPayload = String(newState);
