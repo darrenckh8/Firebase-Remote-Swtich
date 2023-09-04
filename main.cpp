@@ -5,6 +5,7 @@
 #include <ESP8266WiFi.h>
 #endif
 #include <Firebase_ESP_Client.h>
+#include <HTTPClient.h>
 
 // Provide the token generation process info.
 #include "addons/TokenHelper.h"
@@ -167,5 +168,98 @@ void loop()
   {
     Firebase.refreshToken(&config);
     Serial.println("Refresh token");
+  }
+  handleSerialInput();
+}
+
+void handleSerialInput()
+{
+  if (Serial.available())
+  {
+    String command = Serial.readStringUntil('\n'); // Read the command from Serial Monitor
+
+    if (command.startsWith("on "))
+    {
+      int gpioPin = command.substring(3).toInt();
+
+      if (gpioPin >= 2 && gpioPin <= 33)
+      {
+        int newState = 1; // Set the new state (1 for ON)
+        Serial.println("Turning ON GPIO Pin " + String(gpioPin));
+
+        // Create the URL to update the Firebase RTDB (adjust the URL to your database)
+        String url = "https://fp-ep32-default-rtdb.asia-southeast1.firebasedatabase.app/board1/outputs/digital/" + String(gpioPin) + ".json";
+
+        // Create a JSON string with the new state
+        String jsonPayload = String(newState);
+
+        HTTPClient http;
+        http.begin(url);
+
+        // Set the HTTP PUT method and the JSON payload
+        http.addHeader("Content-Type", "application/json");
+        int httpResponseCode = http.PUT(jsonPayload);
+
+        if (httpResponseCode == HTTP_CODE_OK)
+        {
+          Serial.println("Firebase RTDB update successful");
+        }
+        else
+        {
+          Serial.print("Firebase RTDB update failed. HTTP response code: ");
+          Serial.println(httpResponseCode);
+        }
+
+        http.end();
+      }
+      else
+      {
+        Serial.println("Invalid GPIO Pin");
+      }
+    }
+    else if (command.startsWith("off "))
+    {
+
+      int gpioPin = command.substring(3).toInt();
+
+      if (gpioPin >= 2 && gpioPin <= 33)
+      {
+        int newState = 0; // Set the new state (0 for OFF)
+        Serial.println("Turning OFF GPIO Pin " + String(gpioPin));
+
+        // Create the URL to update the Firebase RTDB (adjust the URL to your database)
+        String url = "https://fp-ep32-default-rtdb.asia-southeast1.firebasedatabase.app/board1/outputs/digital/" + String(gpioPin) + ".json";
+
+        // Create a JSON string with the new state
+        String jsonPayload = String(newState);
+
+        HTTPClient http;
+        http.begin(url);
+
+        // Set the HTTP PUT method and the JSON payload
+        http.addHeader("Content-Type", "application/json");
+        int httpResponseCode = http.PUT(jsonPayload);
+
+        if (httpResponseCode == HTTP_CODE_OK)
+        {
+          Serial.println("Firebase RTDB update successful");
+        }
+        else
+        {
+          Serial.print("Firebase RTDB update failed. HTTP response code: ");
+          Serial.println(httpResponseCode);
+        }
+
+        http.end();
+      }
+      else
+      {
+        Serial.println("Invalid GPIO Pin");
+      }
+    }
+    else
+    {
+      Serial.println("Invalid command. Use 'on <pin>'.");
+    }
   }
 }
