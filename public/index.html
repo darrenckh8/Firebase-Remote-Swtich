@@ -121,11 +121,17 @@
       // Create cards for both boards
       boardNames.forEach((boardName) => {
         for (let gpioPin = 2; gpioPin <= 33; gpioPin++) {
-          const cardContainer = document.getElementById("card-grid");
-          const card = document.createElement("div");
-          card.classList.add("card");
-          card.dataset.board = `${boardName}-${gpioPin}`;
-          card.innerHTML = `
+          if (
+            gpioPin === 2 ||
+            gpioPin === 4 ||
+            gpioPin === 5 ||
+            (gpioPin >= 12 && gpioPin <= 33)
+          ) {
+            const cardContainer = document.getElementById("card-grid");
+            const card = document.createElement("div");
+            card.classList.add("card");
+            card.dataset.board = `${boardName}-${gpioPin}`;
+            card.innerHTML = `
         <p class="card-title"><i class="fas fa-lightbulb"></i> GPIO ${gpioPin} on ${boardName}</p>
         <p>
           <button class="button-on" id="btn${boardName}-${gpioPin}On">ON</button>
@@ -133,7 +139,8 @@
         </p>
         <p class="state">State:<span id="state${boardName}-${gpioPin}"></span></p>
       `;
-          cardContainer.appendChild(card);
+            cardContainer.appendChild(card);
+          }
         }
       });
 

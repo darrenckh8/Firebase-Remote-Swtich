@@ -21,7 +21,9 @@ const setupBoard = (boardName) => {
   boards[boardName].dbPathOutputs = {}; // Store database paths in an object
   boards[boardName].dbRefOutputs = {}; // Store database references in an object
 
-  for (let gpioPin = 2; gpioPin <= 33; gpioPin++) {
+  const gpioPins = [2, 4, 5, ...Array.from({ length: 22 }, (_, i) => i + 12)]; // Pins 12 to 33
+
+  gpioPins.forEach((gpioPin) => {
     // Create state element
     boards[boardName].stateElements[gpioPin] = document.getElementById(
       `state${boardName}-${gpioPin}`
@@ -61,7 +63,7 @@ const setupBoard = (boardName) => {
     boards[boardName].btnOff[gpioPin].onclick = () => {
       boards[boardName].dbRefOutputs[gpioPin].set(0);
     };
-  }
+  });
 };
 
 // Initialize GPIO pins for each board
