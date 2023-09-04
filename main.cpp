@@ -26,13 +26,18 @@
 // Insert RTDB URLefine the RTDB URL
 #define DATABASE_URL "https://fp-ep32-default-rtdb.asia-southeast1.firebasedatabase.app/"
 
+// Define board paths & add more board nodes in database to add more support for more boards
+#define B1 "board1/outputs/digital/"
+#define B2 "board2/outputs/digital/"
+//#define B# "board#/outputs/digital/"
+
 // Define Firebase objects
 FirebaseData stream;
 FirebaseAuth auth;
 FirebaseConfig config;
 
-// Variables to save database paths
-String listenerPath = "board1/outputs/digital/";
+// Variables to save database paths & board specifier
+String listenerPath = B1;
 
 // Initialize WiFi
 void initWiFi()
@@ -188,7 +193,7 @@ void handleSerialInput()
         Serial.println("Turning ON GPIO Pin " + String(gpioPin));
 
         // Create the URL to update the Firebase RTDB (adjust the URL to your database)
-        String url = "https://fp-ep32-default-rtdb.asia-southeast1.firebasedatabase.app/board1/outputs/digital/" + String(gpioPin) + ".json";
+        String url = "https://fp-ep32-default-rtdb.asia-southeast1.firebasedatabase.app/"+ String(listenerPath) + String(gpioPin) + ".json";
 
         // Create a JSON string with the new state
         String jsonPayload = String(newState);
@@ -228,7 +233,7 @@ void handleSerialInput()
         Serial.println("Turning OFF GPIO Pin " + String(gpioPin));
 
         // Create the URL to update the Firebase RTDB (adjust the URL to your database)
-        String url = "https://fp-ep32-default-rtdb.asia-southeast1.firebasedatabase.app/board1/outputs/digital/" + String(gpioPin) + ".json";
+        String url = "https://fp-ep32-default-rtdb.asia-southeast1.firebasedatabase.app/"+ String(listenerPath) + String(gpioPin) + ".json";
 
         // Create a JSON string with the new state
         String jsonPayload = String(newState);
