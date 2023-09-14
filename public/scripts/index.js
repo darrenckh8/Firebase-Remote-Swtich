@@ -104,3 +104,6 @@ const setupUI = (user) => {
     contentElement.style.display = "none";
   }
 };
+
+// Define cardContainer at the top of the script
+const cardContainer = document.getElementById("card-grid");
