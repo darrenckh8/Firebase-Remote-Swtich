@@ -88,7 +88,7 @@ boardNames.forEach((boardName) => {
 });
 
 // MANAGE LOGIN/LOGOUT UI
-const setupUI = (user) => {
+export const setupUI = (user) => {
   if (user) {
     // Toggle UI elements
     loginElement.style.display = "none";
