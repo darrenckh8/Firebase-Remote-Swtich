@@ -42,11 +42,9 @@
     />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <link id="darkmode-link" rel="stylesheet" type="text/css" href="darkmode.css" disabled />
   </head>
 
   <body>
-    <button id="darkmode-toggle">Toggle Dark Mode</button>
     <!--TOP BAR-->
     <div class="topnav">
       <h1>ESP GPIO Control <i class="fas fa-lightbulb"></i></h1>
@@ -101,9 +99,6 @@
       const boardNames = ["board1", "board2"]; // Add more board names as needed
       let selectedBoard = boardNames[0]; // Initially select the first board
 
-      // Define cardContainer at the top of the script
-      const cardContainer = document.getElementById("card-grid");
-
       // Function to toggle card visibility based on selected board
       function toggleCards() {
         const cards = document.querySelectorAll(".card");
@@ -132,6 +127,7 @@
             gpioPin === 5 ||
             (gpioPin >= 12 && gpioPin <= 33)
           ) {
+            const cardContainer = document.getElementById("card-grid");
             const card = document.createElement("div");
             card.classList.add("card");
             card.dataset.board = `${boardName}-${gpioPin}`;

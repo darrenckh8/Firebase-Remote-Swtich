@@ -42,13 +42,6 @@ body {
 .card {
   background-color: white;
   box-shadow: 2px 2px 12px 1px rgba(140, 140, 140, 0.5);
-  transition: transform 0.2s, opacity 0.2s;
-  opacity: 0;
-  transform: translateY(20px);
-}
-.card.show {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .card-title {
@@ -66,10 +59,6 @@ button {
   border: none;
   cursor: pointer;
   border-radius: 4px;
-  transition: transform 0.1s;
-}
-button:active {
-  transform: scale(0.95);
 }
 .button-on {
   background-color: #034078;

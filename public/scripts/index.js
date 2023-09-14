@@ -66,29 +66,13 @@ const setupBoard = (boardName) => {
   });
 };
 
-document
-  .getElementById("darkmode-toggle")
-  .addEventListener("click", function () {
-    const darkmodeLink = document.getElementById("darkmode-link");
-    if (darkmodeLink.disabled) {
-      darkmodeLink.disabled = false;
-    } else {
-      darkmodeLink.disabled = true;
-    }
-  });
-
-// Create cards for both boards
+// Initialize GPIO pins for each board
 boardNames.forEach((boardName) => {
   setupBoard(boardName);
-  cardContainer.appendChild(card);
-  // Add animation
-  setTimeout(function () {
-    card.classList.add("show");
-  }, 100);
 });
 
 // MANAGE LOGIN/LOGOUT UI
-export const setupUI = (user) => {
+const setupUI = (user) => {
   if (user) {
     // Toggle UI elements
     loginElement.style.display = "none";
@@ -104,6 +88,3 @@ export const setupUI = (user) => {
     contentElement.style.display = "none";
   }
 };
-
-// Define cardContainer at the top of the script
-const cardContainer = document.getElementById("card-grid");
